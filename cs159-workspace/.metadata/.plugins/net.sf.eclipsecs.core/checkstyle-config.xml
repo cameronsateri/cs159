@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<checkstyle-configurations file-format-version="5.0.0" default-check-configuration="CS15923">
+  <check-configuration name="CS15923" location="https://w3.cs.jmu.edu/cs159/s23/CS159_S23_Checkstyle.xml" type="remote" description="">
+    <additional-data name="cache-file" value="false"/>
+  </check-configuration>
+</checkstyle-configurations>

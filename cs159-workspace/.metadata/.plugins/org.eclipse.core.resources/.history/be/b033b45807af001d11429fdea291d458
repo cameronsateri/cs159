@@ -1,0 +1,118 @@
+/**
+ * Class for the AccessibilityAssessment constructor.
+ * 
+ * @author cameron sateri
+ * @version 2/17/23
+ */
+public class AccessibilityAssessment {
+    private String category;
+    private String googleResult;
+    private String waveResult;
+    private String sortsiteResult;
+    private String aslintResult;
+    private String description;
+
+    /**
+     * Constructs an AccessibilityAssessment object.
+     * 
+     * @param category assesment category.
+     * @param googleResult assesment google result.
+     * @param waveResult assesment wave result.
+     * @param sortsiteResult assesment sorted site result.
+     * @param aslintResult assesment as lint result.
+     * @param description assesment description.
+     */
+    public AccessibilityAssessment(String category, String googleResult, String waveResult, String sortsiteResult,
+            String aslintResult, String description) {
+        this.category = category;
+        this.googleResult = googleResult;
+        this.waveResult = waveResult;
+        this.sortsiteResult = sortsiteResult;
+        this.aslintResult = aslintResult;
+        this.description = description;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public String getGoogleResult() {
+        return this.googleResult;
+    }
+
+    public String getWaveResult() {
+        return this.waveResult;
+    }
+
+    public String getSortsiteResult() {
+        return this.sortsiteResult;
+    }
+
+    public String getAslintResult() {
+        return this.aslintResult;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * ToString method that returns all values in AccessibilityAssessment.
+     * 
+     * @return ret
+     */
+    public String toString() {
+        String ret = "";
+        ret += this.category + " - ";
+        ret += "Google: " + this.googleResult + " ";
+        ret += "WAVE: " + this.waveResult + " ";
+        ret += "SortSite: " + this.sortsiteResult + " ";
+        ret += "ASLint: " + this.aslintResult + " ";
+        ret += "- " + this.description;
+        return ret;
+    }
+
+    /**
+     * Equals method to determine if two AccessibilityAssessment objects are the same.
+     * 
+     * @param other AccessibilityAssessment object.
+     * @return true or false.
+     */
+    public boolean equals(Object other) {
+        if (other instanceof AccessibilityAssessment && other.getCategory().equals(this.category)
+                && other.getGoogleResult().equals(this.googleResult) && other.getWaveResult().equals(this.waveResult)
+                && other.getSortsiteResult().equals(this.sortsiteResult)
+                && other.getAslintResult().equals(this.aslintResult)
+                && other.getDescription().equals(this.description)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determines if the specified result case has "error" or "error_paid".
+     * 
+     * @param checkerPartialName the result case to be tested.
+     * @return true or false;
+     */
+    public boolean passed(String checkerPartialName) {
+        if (checkerPartialName.equalsIgnoreCase("google")) {
+            if (this.googleResult.equals("error") || this.googleResult.equals("error_paid")) {
+                return true;
+            }
+        } else if (checkerPartialName.equalsIgnoreCase("sortsite")) {
+            if (this.sortsiteResult.equals("error") || this.sortsiteResult.equals("error_paid")) {
+                return true;
+            }
+        } else if (checkerPartialName.equalsIgnoreCase("wave")) {
+            if (this.waveResult.equals("error") || this.waveResult.equals("error_paid")) {
+                return true;
+            }
+        } else if (checkerPartialName.equalsIgnoreCase("lint")) {
+            if (this.aslintResult.equals("error") || this.aslintResult.equals("error_paid")) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

@@ -1,0 +1,35 @@
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * File for the LoggingSensor class.
+ * 
+ * @author cameron sateri
+ * @version 4/21/23
+ */
+public class LoggingSensor extends Sensor {
+    private Map<Area, Boolean> scanLog;
+
+    /**
+     * 2 arg constructor for the LoggingSensor class.
+     * 
+     * @param etName The name of the alien.
+     * @param scanTime The time it takes for the scan.
+     */
+    public LoggingSensor(String etName, int scanTime) {
+        super(etName, scanTime);
+        this.scanLog = new HashMap<>();
+    }
+
+    @Override
+    public int scan(int x, int y, int width) {
+        this.scanLog.put(new Area(x, y, width), super.scan(x, y, width) < 0);
+        return super.scan(x, y, width);
+    }
+    
+    @Override
+    public String toString()  {
+        return null;
+    }
+
+}

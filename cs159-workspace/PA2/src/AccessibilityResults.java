@@ -1,0 +1,162 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ * Class containing the AccessibilityResults constructor.
+ * 
+ * @author cameron sateri
+ * @version 2/17/23
+ */
+public class AccessibilityResults {
+    private ArrayList<AccessibilityAssessment> assessments;
+
+    /**
+     * Constructor for AccessibilityResults object.
+     * 
+     * @param filename String representing name of file.
+     */
+    public AccessibilityResults(String filename) {
+        assessments = new ArrayList<AccessibilityAssessment>();
+        try {
+            Scanner s = new Scanner(new File(filename));
+            while (s.hasNext()) {
+                String[] x = s.nextLine().split(" ");
+                String desc = x[5];
+                for (int i = 6; i < x.length; i++) {
+                    desc += " " + x[i];
+                }
+                assessments.add(new AccessibilityAssessment(x[0], x[1], x[2], x[3], x[4], desc));
+            }
+            s.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filename);
+        }
+    }
+
+    /**
+     * Access the number of accessibilityAssessment objects.
+     * 
+     * @return assessments.size.
+     */
+    public int numTests() {
+        return assessments.size();
+    }
+
+    /**
+     * Writes all of the outputs from the results arraylist into the file from filename.
+     * 
+     * @param filename name of file to write in.
+     * @param format formatting of the last line.
+     * @param results arraylist of objects to write in the file.
+     */
+    public void saveResults(String filename, String format, ArrayList<AccessibilityAssessment> results) {
+        try {
+            PrintWriter pw = new PrintWriter(new File(filename));
+            for (int i = 0; i < results.size(); i++) {
+                pw.write(results.get(i).toString());
+                pw.write("\n");
+            }
+            pw.write("\n" + String.format(format, results.size()));
+            pw.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filename);
+        }
+    }
+
+    /**
+     * Returns list containing AccessibilityAssessment objects that contain details.
+     * 
+     * @param details the details to be searched for in assessments.
+     * @return ArrayList AccessibilityAssessment ret, a list containing objects containing the details.
+     */
+    public ArrayList<AccessibilityAssessment> showTestResults(String details) {
+        ArrayList<AccessibilityAssessment> ret = new ArrayList<AccessibilityAssessment>();
+        for (int i = 0; i < assessments.size(); i++) {
+            if (assessments.get(i).getCategory().contains(details)
+                    || assessments.get(i).getDescription().contains(details)) {
+                ret.add(assessments.get(i));
+            }
+        }
+        saveResults("showTestResults-" + details + ".txt", "Total tests matching: %s", ret);
+        return ret;
+    }
+
+    /**
+     * Returns list containing AccessibilityAssessment objects that contain category.
+     * 
+     * @param category the category in the list to be found.
+     * @return ArrayList AccessibilityAssessment ret, a list containing objects containing the category.
+     */
+    public ArrayList<AccessibilityAssessment> showByCategory(String category) {
+        ArrayList<AccessibilityAssessment> ret = new ArrayList<AccessibilityAssessment>();
+        for (int i = 0; i < assessments.size(); i++) {
+            if (assessments.get(i).getCategory().contains(category)) {
+                ret.add(assessments.get(i));
+            }
+        }
+        saveResults("showByCategory-" + category + ".txt", "Total tests matching: %s", ret);
+        return ret;
+    }
+
+    /**
+     * Returns list containing AccessibilityAssessment objets that contain only notfound's.
+     * 
+     * @return ArrayList AccessibilityAssessment ret, a list containing objects containing all notfound's.
+     */
+    public ArrayList<AccessibilityAssessment> showAllFailed() {
+        ArrayList<AccessibilityAssessment> ret = new ArrayList<AccessibilityAssessment>();
+        for (int i = 0; i < assessments.size(); i++) {
+            if (assessments.get(i).getGoogleResult().equals("notfound")
+                    && assessments.get(i).getWaveResult().equals("notfound")
+                    && assessments.get(i).getSortsiteResult().equals("notfound")
+                    && assessments.get(i).getAslintResult().equals("notfound")) {
+                ret.add(assessments.get(i));
+            }
+        }
+        saveResults("showAllFailed.txt", "Total tests failed: %s", ret);
+        return ret;
+    }
+
+    /**
+     * Returns list containing AccessibilityAssessment objets that contain category and have an error in the name
+     * result.
+     * 
+     * @param name the result tester to use.
+     * @param category the category of the objects to return
+     * @return ArrayList AccessibilityAssessment ret, a list containing all objects with category and errors at name.
+     */
+    public ArrayList<AccessibilityAssessment> passing(String name, String category) {
+        ArrayList<AccessibilityAssessment> ret = new ArrayList<AccessibilityAssessment>();
+        for (int i = 0; i < assessments.size(); i++) {
+            if (assessments.get(i).passed(name) && assessments.get(i).getCategory().contains(category)) {
+                ret.add(assessments.get(i));
+            }
+        }
+        saveResults("passing-" + name + "-" + category + ".txt", "Total tests matching: %s", ret);
+        return ret;
+    }
+
+    /**
+     * Returns count of how many errors were in category from assessments.
+     * 
+     * @param name name of result checker to use.
+     * @param category category to check under in assessments.
+     * @return count
+     */
+    public int numPass(String name, String category) {
+        int count = 0;
+        for (int i = 0; i < assessments.size(); i++) {
+            if (assessments.get(i).passed(name) && assessments.get(i).getCategory().contains(category)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public ArrayList<AccessibilityAssessment> getAll() {
+        return assessments;
+    }
+}
